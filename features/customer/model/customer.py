@@ -19,6 +19,8 @@ class CustomerModel(db.Model):
     registration_date = db.Column(DateTime)
     mobile_no = db.Column(db.String(10), nullable=False)
 
+    enrollments = db.relationship('CustomerPlanEnrollmentModel', viewonly=True)
+
     @property
     def json(self):
         return {
@@ -28,6 +30,8 @@ class CustomerModel(db.Model):
             'aadhar_number': self.aadhar_number,
             'registration_date': self.registration_date.strftime("%d-%m-%Y"),
             'mobile_no': self.mobile_no,
+            "enrollments": [enrollment.json for enrollment in
+                            self.enrollments] if self.enrollments else []
         }
 
     def save_to_db(self):
